@@ -1,67 +1,77 @@
 #include <iostream>
-#include <stdio.h>
 #include <string>
 
-float depoisMedia = 0.0f;
+#define TOTAL_NOTAS_SIZE 3
+int totalAlunos = 1;
+float notasSoma = 0;
+float mediaTotal;
 
 class Aluno {
-public:
-    char nome[100];
-    int idade;
-    char sexo[100];
-    float nota[100];
-    bool aprovado;    
+    public:
+        std::string nome;
+        int idade;
+        std::string sexo;
+        float notas[TOTAL_NOTAS_SIZE];
+        float totalNotas;
+        bool aprovado;
 };
 
 int main() {
-    float mediaAprov;
-    int qtdAlunos;
-    class Aluno alunos[100];
-    std::cout << "Digite a media de aprovacao da faculdade" << std::endl;
-    std::cin >> mediaAprov;
-    std::cout << "Digite a qtd de alunos" << std::endl;
-    std::cin >> qtdAlunos;
-    for (int i = 0; i < qtdAlunos; i++) {
-        std::cout << "Digite o nome do "<< i + 1 << " Aluno" << std::endl;
+    std::cout << "Quantos alunos no total? " << std::endl;
+    std::cin >> totalAlunos;
+
+    std::cout << "Qual a media da escola? " << std::endl;
+    std::cin >> mediaTotal;
+
+    system("clear");
+
+    Aluno alunos[totalAlunos];
+
+    for (int i = 0; i < totalAlunos; i++) {
+        notasSoma = 0;
+        std::cout << "Qual o nome do " << i + 1 << " aluno? " << std::endl;
         std::cin >> alunos[i].nome;
-        std::cout << "Digite a idade do "<< i + 1 << " Aluno" << std::endl;
+
+        std::cout << "Qual a idade do " << alunos[i].nome << " ? " << std::endl;
         std::cin >> alunos[i].idade;
-        std::cout << "Digite o sexo do "<< i + 1 << " Aluno" << std::endl;
-        std::cin >> alunos[i].sexo;
         
-        for (int k = 0; k < 3; k++) {
-            alunos[k].nota[k] = 0.0;
-            printf("%d nota: ", k + 1);
-            std::cin >> alunos[k].nota[k];
-            //printf("nota %d: %f\n", k + 1, alunos[k].nota[k]);
+        std::cout << "Qual o sexo do " << alunos[i].nome << " ? " << std::endl;
+        std::cin >> alunos[i].sexo;
+
+        for (int j = 0; j < TOTAL_NOTAS_SIZE; j++) {
+            std::cout << "Qual a " << j + 1 << " nota do " << alunos[i].nome << " ? " << std::endl;
+            std::cin >> alunos[i].notas[j];
+
+            notasSoma += alunos[i].notas[j];
+            alunos[i].totalNotas = notasSoma;
+        }
+
+        if (notasSoma > mediaTotal) {
+            alunos[i].aprovado = true;
+        } else {
+            alunos[i].aprovado = false;
         }
         system("clear");
+    }
+
+    //print tudo
+    for (int i = 0; i < totalAlunos; i++) {
+        std::cout << "----------------------------" << std::endl;
+        std::cout << "Nome: " << alunos[i].nome << std::endl;
+        std::cout << "idade: " << alunos[i].idade << std::endl;
+        std::cout << "sexo: " << alunos[i].sexo << std::endl;
+        std::cout << "Total notas: " << alunos[i].totalNotas << std::endl; 
         
-        if (i == qtdAlunos - 1) {
-            for (int j = 0; j < qtdAlunos; j++) {
-                printf("Aluno: %d\n", j + 1);
-                printf("\tNome: %s\n", alunos[j].nome);
-                printf("\tIdade: %d\n", alunos[j].idade);
-                printf("\tSexo: %s\n\n", alunos[j].sexo);
-                printf("\tNotas: \n");
-                for (int y = 0; y < 100; y++) {
-                    printf("\t%d: %f\n", y + 1 ,alunos[y].nota[y]);
-                    depoisMedia = depoisMedia + alunos[y].nota[y]; 
-                    if (depoisMedia >= mediaAprov) {
-                        alunos[y].aprovado = true;
-                    } else {
-                        alunos[y].aprovado = false;
-                    }
-                    if (y >= 100 -1) {
-                        if (alunos[y].aprovado == 1) {
-                            printf("\t\tStatus: passou");
-                        } else {
-                            printf("\tStatus: reprovou");
-                        }
-                    }
-                }
-                
-            }
+        //print notas
+        //for (int j = 0; j < TOTAL_NOTAS_SIZE; j++) {
+        //    std::cout << "\tNota " << j + 1 << ": " << alunos[i].notas[j] << std::endl;
+        //}
+
+        if (alunos[i].aprovado == 0) {
+            std::cout << "status: Reprovado" << std::endl;
+        } else {
+            std::cout << "status: Aprovado" << std::endl;
         }
     }
+    std::cout << "----------------------------" << std::endl;
 }
