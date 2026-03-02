@@ -1,8 +1,6 @@
 #include <iostream>
 #include <string>
 
-float calcula_media(float *, int);
-
 #define TOTAL_NOTAS_SIZE 3
 
 #if defined(_WIN32)
@@ -22,6 +20,10 @@ class Aluno {
         float notas[TOTAL_NOTAS_SIZE];
 };
 
+void get_alunos_data(Aluno &a);
+float calcula_media(float *, int);
+void list_alunos(Aluno &a);
+
 int main() {
     std::cout << "Quantos alunos no total? " << std::endl;
     std::cin >> total_alunos;
@@ -34,43 +36,52 @@ int main() {
     Aluno alunos[total_alunos];
     
     for (int i = 0; i < total_alunos; i++) {
-        std::cout << "Qual o nome do " << i + 1 << " aluno? " << std::endl;
-        std::cin >> alunos[i].nome;
-
-        std::cout << "Qual a idade do " << alunos[i].nome << " ? " << std::endl;
-        std::cin >> alunos[i].idade;
-        
-        std::cout << "Qual o sexo do " << alunos[i].nome << " ? " << std::endl;
-        std::cin >> alunos[i].sexo;
-
-        for (int j = 0; j < TOTAL_NOTAS_SIZE; j++) {
-            std::cout << "Qual a " << j + 1 << " nota do " << alunos[i].nome << " ? " << std::endl;
-            std::cin >> alunos[i].notas[j];
-        }
-        system(PRINT);
+        get_alunos_data(alunos[i]);
     }
-    
+   
     for (int i = 0; i < total_alunos; i++) {
         float nota_aluno = calcula_media(alunos[i].notas, TOTAL_NOTAS_SIZE);
-        std::cout << "----------------------------" << std::endl;
-        std::cout << "Nome: " << alunos[i].nome << std::endl;
-        std::cout << "idade: " << alunos[i].idade << std::endl;
-        std::cout << "sexo: " << alunos[i].sexo << std::endl;
-
-        //Print notas
-        //for (int j = 0; j < TOTAL_NOTAS_SIZE; j++) {
-        //    std::cout << "Nota " << j + 1 << ": " << alunos[i].notas[j] << std::endl;
-        //}
-        
+        list_alunos(alunos[i]);
         std::cout << "Media do aluno: " << nota_aluno << std::endl; 
-
         if (nota_aluno < media_escola) {
             std::cout << "Status: Reprovado" << std::endl;
         } else {
             std::cout << "Status: Aprovado" << std::endl;
         }
     }
+
     std::cout << "----------------------------" << std::endl;
+}
+
+void get_alunos_data(Aluno &a) {
+    int i = 0;
+    std::cout << "Qual o nome do aluno? " << std::endl;
+    std::cin >> a.nome;
+
+    std::cout << "Qual a idade do " << a.nome << " ? " << std::endl;
+    std::cin >> a.idade;
+    
+    std::cout << "Qual o sexo do " << a.nome << " ? " << std::endl;
+    std::cin >> a.sexo;
+
+    for (int j = 0; j < TOTAL_NOTAS_SIZE; j++) {
+        std::cout << "Qual a " << j + 1 << " nota do " << a.nome << " ? " << std::endl;
+        std::cin >> a.notas[j];
+    }
+    system(PRINT);
+}
+
+void list_alunos(Aluno &a) {
+    std::cout << "----------------------------" << std::endl;
+    std::cout << "Nome: " << a.nome << std::endl;
+    std::cout << "Idade: " << a.idade << std::endl;
+    std::cout << "Sexo: " << a.sexo << std::endl;
+    
+    //Printa notas
+    //for (int j = 0; j < TOTAL_NOTAS_SIZE; j++) {
+    //    //std::cout << nota[j] << std::endl;
+    //    std::cout << "Nota " << j + 1 << ": " << a.notas[j] << std::endl;
+    //}
 }
 
 float calcula_media(float *lista, int arr_size) {
