@@ -2,6 +2,13 @@
 #include <string>
 
 #define TOTAL_NOTAS_SIZE 3
+
+#if defined(_WIN32)
+    #define PRINT "cls"
+#elif defined(__linux__)
+    #define PRINT "clear"
+#endif  
+
 int totalAlunos = 1;
 float notasSoma = 0;
 float mediaTotal;
@@ -23,7 +30,7 @@ int main() {
     std::cout << "Qual a media da escola? " << std::endl;
     std::cin >> mediaTotal;
 
-    system("clear");
+    system(PRINT);
 
     Aluno alunos[totalAlunos];
 
@@ -51,7 +58,7 @@ int main() {
         } else {
             alunos[i].aprovado = false;
         }
-        system("clear");
+        system(PRINT);
     }
 
     //print tudo
