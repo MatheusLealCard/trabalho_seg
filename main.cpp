@@ -1,4 +1,6 @@
 #include <iostream>
+#include <vector>
+#include <array>
 #include <string>
 
 #define TOTAL_NOTAS_SIZE 3
@@ -17,11 +19,11 @@ class Aluno {
         std::string nome;
         int idade;
         std::string sexo;
-        float notas[TOTAL_NOTAS_SIZE];
+        std::array<float, TOTAL_NOTAS_SIZE> notas;
 };
 
 void get_alunos_data(Aluno &a);
-float calcula_media(float *, int);
+float calcula_media(std::array<float, TOTAL_NOTAS_SIZE>& nota);
 void list_alunos(Aluno &a);
 
 int main() {
@@ -33,14 +35,14 @@ int main() {
 
     system(PRINT);
 
-    Aluno alunos[total_alunos];
+    std::vector<Aluno> alunos(total_alunos);
     
     for (int i = 0; i < total_alunos; i++) {
         get_alunos_data(alunos[i]);
     }
    
     for (int i = 0; i < total_alunos; i++) {
-        float nota_aluno = calcula_media(alunos[i].notas, TOTAL_NOTAS_SIZE);
+        float nota_aluno = calcula_media(alunos[i].notas);
         list_alunos(alunos[i]);
         std::cout << "Media do aluno: " << nota_aluno << std::endl; 
         if (nota_aluno < media_escola) {
@@ -58,14 +60,14 @@ void get_alunos_data(Aluno &a) {
     std::cout << "Qual o nome do aluno? " << std::endl;
     std::cin >> a.nome;
 
-    std::cout << "Qual a idade do " << a.nome << " ? " << std::endl;
+    std::cout << "Qual a idade do " << a.nome << "? " << std::endl;
     std::cin >> a.idade;
     
-    std::cout << "Qual o sexo do " << a.nome << " ? " << std::endl;
+    std::cout << "Qual o sexo do " << a.nome << "? " << std::endl;
     std::cin >> a.sexo;
 
     for (int j = 0; j < TOTAL_NOTAS_SIZE; j++) {
-        std::cout << "Qual a " << j + 1 << " nota do " << a.nome << " ? " << std::endl;
+        std::cout << "Qual a " << j + 1 << " nota do " << a.nome << "? " << std::endl;
         std::cin >> a.notas[j];
     }
     system(PRINT);
@@ -84,12 +86,12 @@ void list_alunos(Aluno &a) {
     //}
 }
 
-float calcula_media(float *lista, int arr_size) {
-    if (arr_size == 0) return 0.0f;
+float calcula_media(std::array<float, TOTAL_NOTAS_SIZE>& nota) {
     float soma = 0.0f;
+    
+    for (float n : nota) {
+        soma += n;
+    }
 
-    for (int i = 0; i < arr_size; i++) {
-        soma += lista[i];
-    } 
-    return soma / arr_size;
+    return soma / nota.size();
 }
