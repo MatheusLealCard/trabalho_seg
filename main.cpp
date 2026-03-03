@@ -1,42 +1,52 @@
 #include <iostream>
 #include <vector>
-#include <array>
 #include <string>
-
-#define TOTAL_NOTAS_SIZE 3
+#include <limits>
 
 #if defined(_WIN32)
     #define PRINT "cls"
 #elif defined(__linux__)
     #define PRINT "clear"
-#endif 
+#endif
 
-int total_alunos = 0;
-int media_escola = 5;
+int total_alunos;
+int total_notas;
+int media_escola;
+int alunos_reprovados;
+int alunos_aprovados;
+int total_feminino;
+int total_masculino;
+float percentual_aprovados;
+float total_todos;
+float media_turma;
 
 class Aluno {
     public:
         std::string nome;
         int idade;
         std::string sexo;
-        std::array<float, TOTAL_NOTAS_SIZE> notas;
+        std::vector<float> notas;
+        bool aprovado;
 };
 
 void get_alunos_data(Aluno &a);
-float calcula_media(std::array<float, TOTAL_NOTAS_SIZE>& nota);
+float calcula_media(std::vector<float>& nota);
 void list_alunos(Aluno &a);
 
 int main() {
     std::cout << "Quantos alunos no total? " << std::endl;
     std::cin >> total_alunos;
 
+    std::cout << "Quantas notas no total? " << std::endl;
+    std::cin >> total_notas;
+
     std::cout << "Qual a media da escola? " << std::endl;
     std::cin >> media_escola;
 
-    system(PRINT);
-
     std::vector<Aluno> alunos(total_alunos);
     
+    system(PRINT);
+
     for (int i = 0; i < total_alunos; i++) {
         get_alunos_data(alunos[i]);
     }
@@ -46,27 +56,66 @@ int main() {
         list_alunos(alunos[i]);
         std::cout << "Media do aluno: " << nota_aluno << std::endl; 
         if (nota_aluno < media_escola) {
+            alunos[i].aprovado = false;
             std::cout << "Status: Reprovado" << std::endl;
         } else {
+            alunos[i].aprovado = true;
             std::cout << "Status: Aprovado" << std::endl;
         }
+        if (alunos[i].aprovado == 0) {
+            alunos_reprovados += 1;
+        }
     }
-
     std::cout << "----------------------------" << std::endl;
+    
+    alunos_aprovados = total_alunos - alunos_reprovados;
+    percentual_aprovados = (float)alunos_aprovados / total_alunos * 100.0f;
+    total_feminino = total_alunos - total_masculino;
+
+    std::cout << "Total alunos reprovados: " << alunos_reprovados << std::endl;
+    std::cout << "Taxa de aprovacao: " << percentual_aprovados << "%" << std::endl;
+    std::cout << "Homens no total: " << total_masculino << std::endl;
+    std::cout << "Mulheres no total: " << total_feminino << std::endl;
+
+    for (int i  = 0; i < total_alunos; i++) {
+        for (int j = 0; j < total_notas; j++) {
+            total_todos += alunos[i].notas[j];
+        }
+    }
+    media_turma = total_todos / (total_alunos * total_notas);
+
+    std::cout << "Total aritmetica turma: " << media_turma << std::endl;
+}
+
+template <typename T>
+T falha_input(const std::string &pergunta, const std::string &erro_mensagem) {
+    T valor;
+    while(true) {
+        std::cout << pergunta << std::endl;
+        std::cin >> valor;
+        if (std::cin.fail()) {
+            std::cin.clear();
+            //se nao limpar o buffer do cin fica loop infinito
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << erro_mensagem << std::endl;   
+        } else {
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            break;
+        }
+    }
+    return valor;
 }
 
 void get_alunos_data(Aluno &a) {
     int i = 0;
-    std::cout << "Qual o nome do aluno? " << std::endl;
-    std::cin >> a.nome;
-
-    std::cout << "Qual a idade do " << a.nome << "? " << std::endl;
-    std::cin >> a.idade;
+    a.notas.resize(total_notas);
     
-    std::cout << "Qual o sexo do " << a.nome << "? " << std::endl;
-    std::cin >> a.sexo;
-
-    for (int j = 0; j < TOTAL_NOTAS_SIZE; j++) {
+    a.nome = falha_input<std::string>("Qual o nome do aluno? ", "Apenas letras");
+    a.idade = falha_input<int>("Qual a idade do aluno? ", "Apenas numeros inteiros");
+    a.sexo = falha_input<std::string>("Qual o sexo do aluno(M/F)?", "Apenas M/F");
+    
+    a.notas.resize(total_notas);
+    for (int j = 0; j < total_notas; j++) {
         std::cout << "Qual a " << j + 1 << " nota do " << a.nome << "? " << std::endl;
         std::cin >> a.notas[j];
     }
@@ -78,20 +127,21 @@ void list_alunos(Aluno &a) {
     std::cout << "Nome: " << a.nome << std::endl;
     std::cout << "Idade: " << a.idade << std::endl;
     std::cout << "Sexo: " << a.sexo << std::endl;
-    
+    if (a.sexo == "M" || a.sexo == "m") {
+        total_masculino += 1;
+    }     
     //Printa notas
-    //for (int j = 0; j < TOTAL_NOTAS_SIZE; j++) {
+    //for (int j = 0; j < total_notas; j++) {
     //    //std::cout << nota[j] << std::endl;
     //    std::cout << "Nota " << j + 1 << ": " << a.notas[j] << std::endl;
     //}
 }
 
-float calcula_media(std::array<float, TOTAL_NOTAS_SIZE>& nota) {
+float calcula_media(std::vector<float>& nota) {
     float soma = 0.0f;
     
     for (float n : nota) {
         soma += n;
     }
-
     return soma / nota.size();
 }
