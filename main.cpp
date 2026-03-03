@@ -1,3 +1,10 @@
+// Caros espectadores caso estiver no windows, usa a flag pro c++11 ou maior v
+// Caros amigos que estiverem no dev c++, vá em "Ferramentas(ou tools)", continua... 
+// selecione a opcao "compilador(ou compiler options)"
+// marca a opcao "adicionar os seguintes comandos(ou add the folowing commands when calling the compiler)"
+// se tiver marcado deixa
+// no campo do texto(se tiver algo la so dar um espaco) coloca -std=c++11 clica em ok e compila e roda
+
 #include <iostream>
 #include <vector>
 #include <string>
@@ -87,6 +94,7 @@ int main() {
     std::cout << "Total aritmetica turma: " << media_turma << std::endl;
 }
 
+// nao entendi por que o template nao pode ficar nos meus prototipos, por isso nao ta la em cima
 template <typename T>
 T falha_input(const std::string &pergunta, const std::string &erro_mensagem) {
     T valor;
@@ -95,7 +103,10 @@ T falha_input(const std::string &pergunta, const std::string &erro_mensagem) {
         std::cin >> valor;
         if (std::cin.fail()) {
             std::cin.clear();
-            //se nao limpar o buffer do cin fica loop infinito
+            // cin loop infinito se buffer nao vazio
+            // LEMBRETE isso aqui em bxo faz o sgyunte: numeric_limits percorre o tamanho do buffer do cin
+            // se digitar o type errado e o cin antigo foi abc ele percorre esses 4bytes contanu o \n
+            // entao nao aumenta o tempo de execucao, a nao ser que escrevam a biblia inteira no cin
             std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
             std::cout << erro_mensagem << std::endl;   
         } else {
@@ -110,12 +121,14 @@ void get_alunos_data(Aluno &a) {
     int i = 0;
     a.notas.resize(total_notas);
     
+    // resolver o nome do aluno depois
     a.nome = falha_input<std::string>("Qual o nome do aluno? ", "Apenas letras");
     a.idade = falha_input<int>("Qual a idade do aluno? ", "Apenas numeros inteiros");
     a.sexo = falha_input<std::string>("Qual o sexo do aluno(M/F)?", "Apenas M/F");
-    
+  
     a.notas.resize(total_notas);
     for (int j = 0; j < total_notas; j++) {
+        // falta colocar o check aq, preguicoso
         std::cout << "Qual a " << j + 1 << " nota do " << a.nome << "? " << std::endl;
         std::cin >> a.notas[j];
     }
@@ -127,10 +140,12 @@ void list_alunos(Aluno &a) {
     std::cout << "Nome: " << a.nome << std::endl;
     std::cout << "Idade: " << a.idade << std::endl;
     std::cout << "Sexo: " << a.sexo << std::endl;
+
+    // se for l é mulher kkkk, resolve ai dpois
     if (a.sexo == "M" || a.sexo == "m") {
         total_masculino += 1;
     }     
-    //Printa notas
+    // qr ver todas as notas? me apag
     //for (int j = 0; j < total_notas; j++) {
     //    //std::cout << nota[j] << std::endl;
     //    std::cout << "Nota " << j + 1 << ": " << a.notas[j] << std::endl;
