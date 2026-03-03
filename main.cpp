@@ -1,5 +1,5 @@
 // Caros espectadores caso estiver no windows, usa a flag pro c++11 ou maior v
-// Caros amigos que estiverem no dev c++, v√° em "Ferramentas(ou tools)", continua... 
+// Caros amigos que estiverem no dev c++, v· em "Ferramentas(ou tools)", continua... 
 // selecione a opcao "compilador(ou compiler options)"
 // marca a opcao "adicionar os seguintes comandos(ou add the folowing commands when calling the compiler)"
 // se tiver marcado deixa
@@ -129,8 +129,7 @@ void get_alunos_data(Aluno &a) {
     a.notas.resize(total_notas);
     for (int j = 0; j < total_notas; j++) {
         // falta colocar o check aq, preguicoso
-        std::cout << "Qual a " << j + 1 << " nota do " << a.nome << "? " << std::endl;
-        std::cin >> a.notas[j];
+        a.notas[j] = falha_input<float>("Qual a nota", "apenas floats");
     }
     system(PRINT);
 }
@@ -141,7 +140,7 @@ void list_alunos(Aluno &a) {
     std::cout << "Idade: " << a.idade << std::endl;
     std::cout << "Sexo: " << a.sexo << std::endl;
 
-    // se for l √© mulher kkkk, resolve ai dpois
+    // se for l È mulher kkkk, resolve ai dpois
     if (a.sexo == "M" || a.sexo == "m") {
         total_masculino += 1;
     }     
